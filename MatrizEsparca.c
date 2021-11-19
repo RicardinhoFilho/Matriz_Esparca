@@ -212,25 +212,44 @@ int gerar_transposta(Lista_Matrizes *li, Nodos_Matriz *corpo, int lin, int col, 
         return 0;
     }
 
-    Matrizes *no = (Matrizes *)malloc(sizeof(Matrizes));
-    if (no == NULL)
-        return 0;
-    no->corpo = corpo;
-    no->qtd_c = lin;
-    no->qtd_l = col;
-    strcpy(no->nome, nome);
-
     Nodo_Matriz *no_nodo = *corpo;
     struct Nodos_Matriz *li_nodo = cria_lista_nodo();
-    while (no != NULL)
+    while (no_nodo != NULL)
     {
         insere_lista_nodo(li_nodo, no_nodo->col, no_nodo->lin, no_nodo->dado);
-        no = no->prox;
+        no_nodo = no_nodo->prox;
     }
 
     insere_dados_matriz(li, li_nodo, lin, col, nome);
     return 1;
 };
+
+int somar_matrizes(Lista_Matrizes *li, Nodos_Matriz *corpo1, Nodos_Matriz *corpo2, char nome[1], int linhas, int colunas)
+{
+    int l, c;
+    
+    struct Nodos_Matriz *li_nodo = cria_lista_nodo();
+    printf("%d x %d",linhas,colunas);
+    for (l = 0; l < linhas; l++)
+    {
+        for (c = 0; c < colunas; c++)
+        {
+            printf("%f",buscaNodoPorPosicao(corpo1, l + 1, c + 1));
+             float valor1 = buscaNodoPorPosicao(corpo1, l + 1, c + 1);
+             float valor2 = buscaNodoPorPosicao(corpo2, l + 1, c + 1);
+
+             if ((valor1 + valor2 )!= 0)
+             {   
+                 printf("teste\n");
+             printf("valor1 + valor2 = %.2f", valor1);
+                  insere_lista_nodo(li_nodo, l + 1, c + 1, valor1 + valor2);
+             }
+        }
+    }
+
+      insere_dados_matriz(li, li_nodo,colunas,linhas, nome);
+    return 1;
+}
 
 int main()
 {
@@ -243,7 +262,7 @@ int main()
     li = cria_lista();
     while (entrada != 12)
     {
-        printf("\n1) Criar Matriz Esparsa\n2)Listar Matrizes\n3)Imprimir Matriz\n3)Gerar matriz transposta\n\n");
+        printf("\n1) Criar Matriz Esparsa\n2)Listar Matrizes\n3)Imprimir Matriz\n4)Gerar matriz transposta\n5)Somar Matrizes\n\n");
         scanf(" %d", &entrada);
 
         switch (entrada)
@@ -332,6 +351,33 @@ int main()
             printf("Como deseja chamar esta matriz?");
             scanf("%s", &nome[0]);
             gerar_transposta(li, teste->corpo, teste->qtd_l, teste->qtd_c, nome);
+            break;
+        }
+        case 5:
+        {
+            printf("Qual matrizes deseja somar?\n");
+            printf("Primeira Matriz?");
+            scanf("%s", &nome[0]);
+            Matrizes *primeira = buscaPorNome(li, nome);
+
+            printf("Segunda Matriz?\n");
+            scanf("%s", &nome[0]);
+            Matrizes *segunda = buscaPorNome(li, nome);
+
+            if (primeira->qtd_c != segunda->qtd_c || segunda->qtd_l != primeira->qtd_l)
+            {
+
+                printf("Infelimente não é possível somar uma matriz %dx%d com uma %dx%d", primeira->qtd_l, primeira->qtd_c, segunda->qtd_l, segunda->qtd_c);
+            }
+            else
+            {
+
+                printf("Qual o nome da matriz que deseja gerar? ");
+                scanf("%s", &nome[0]);
+
+                somar_matrizes(li, primeira->corpo, segunda->corpo, nome, primeira->qtd_l, segunda->qtd_c);
+            }
+
             break;
         }
         }
