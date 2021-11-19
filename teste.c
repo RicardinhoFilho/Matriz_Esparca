@@ -297,17 +297,18 @@ int multiplicar_matrizes(Lista_Matrizes *li, Matrizes *primeira, Matrizes *segun
         for (col = 0; col < segunda->qtd_c; col++)
         {
 
-            for (x = 0; x < segunda->qtd_c; x++)
+            for (x = 0; x < segunda->qtd_c + 1; x++)
             {
-               float valor1 = buscaNodoPorPosicao(pri_nodo, lin + 1, x + 1); 
-               float valor2 = buscaNodoPorPosicao(seg_nodo, x + 1, col+1); 
-               soma = valor1 * valor2 + soma;
+                float valor1 = buscaNodoPorPosicao(pri_nodo, lin + 1, x + 1);
+                float valor2 = buscaNodoPorPosicao(seg_nodo, x + 1, col + 1);
+                soma = valor1 * valor2 + soma;
 
-               printf("Primeira soma-> %2.f*%2.f = %2.f\n\n", valor1, valor2, soma );
+                printf("%.2f*%.2f = %.2f + ", valor1, valor2, soma);
             }
-            insere_lista_nodo(li_nodo, lin, col, soma);
-            soma = 0;            
-            
+            insere_lista_nodo(li_nodo, lin+1, col+1, soma);
+            printf("\n Soma: %f\n", soma);
+
+            soma = 0;
         }
     }
 
@@ -325,7 +326,7 @@ int main()
     li = cria_lista();
     while (entrada != 12)
     {
-        printf("\n1) Criar Matriz Esparsa\n2)Listar Matrizes\n3)Imprimir Matriz\n4)Gerar matriz transposta\n5)Somar Matrizes\n6)Subtrair Matrizes\n7)Multiplicar Matrizes\n\n");
+        printf("\n1) Criar Matriz Esparsa\n2)Listar Matrizes\n3)Imprimir Matriz\n4)Gerar matriz transposta\n5)Somar Matrizes\n6)Subtrair Matrizes\n7)Multiplicar Matrizes\n8)Liberar matrizes\n\n");
         scanf(" %d", &entrada);
 
         switch (entrada)
