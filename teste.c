@@ -234,14 +234,13 @@ int somar_matrizes(Lista_Matrizes *li, Nodos_Matriz *corpo1, Nodos_Matriz *corpo
     {
         for (c = 0; c < colunas; c++)
         {
-            // printf("%f",buscaNodoPorPosicao(corpo1, l + 1, c + 1));
+            
             float valor1 = buscaNodoPorPosicao(corpo1, l + 1, c + 1);
             float valor2 = buscaNodoPorPosicao(corpo2, l + 1, c + 1);
 
             if ((valor1 + valor2) != 0)
             {
-                // printf("teste\n");
-                //printf("valor1 + valor2 = %.2f", valor1);
+               
                 insere_lista_nodo(li_nodo, l + 1, c + 1, valor1 + valor2);
             }
         }
@@ -261,53 +260,19 @@ int subtrair_matrizes(Lista_Matrizes *li, Nodos_Matriz *corpo1, Nodos_Matriz *co
     {
         for (c = 0; c < colunas; c++)
         {
-            // printf("%f",buscaNodoPorPosicao(corpo1, l + 1, c + 1));
+            
             float valor1 = buscaNodoPorPosicao(corpo1, l + 1, c + 1);
             float valor2 = buscaNodoPorPosicao(corpo2, l + 1, c + 1);
 
             if ((valor1 - valor2) != 0)
             {
-                // printf("teste\n");
-                //printf("valor1 + valor2 = %.2f", valor1);
+               
                 insere_lista_nodo(li_nodo, l + 1, c + 1, valor1 - valor2);
             }
         }
     }
 
     insere_dados_matriz(li, li_nodo, colunas, linhas, nome);
-    return 1;
-}
-
-int multiplicar_matrizes(Lista_Matrizes *li, Matrizes *primeira, Matrizes *segunda, char nome[1])
-{
-    int li, col, valor_P, valor_S;
-    float soma;
-    if (primeira->qtd_c != primeira->qtd_l)
-    {
-
-        printf("Não é possivel multiplar uma matriz %dx%d por uma %dx%d", primeira->qtd_l, primeira->qtd_c, segunda->qtd_l, segunda->qtd_c);
-        return 0;
-    }
-
-    struct Nodos_Matriz *li_nodo = cria_lista_nodo();
-
-    Nodo_Matriz *pri_nodo = primeira->corpo;
-    Nodo_Matriz *seg_nodo = segunda->corpo;
-
-    for (col = 0; col < primeira->qtd_c; col)
-    {
-        soma = 0;
-        for (li = 0; li < primeira->qtd_l; li)
-        {
-            valor_P = buscaNodoPorPosicao(pri_nodo, col + 1, li + 1);
-            valor_S = buscaNodoPorPosicao(seg_nodo, li + 1, col + 1);
-            soma = valor_P * valor_S + soma;
-        }
-
-        insere_lista_nodo(li_nodo, col + 1, li + 1, soma);
-    }
-
-    insere_dados_matriz(li, li_nodo, primeira->qtd_l, segunda->qtd_c, nome);
     return 1;
 }
 
@@ -322,7 +287,7 @@ int main()
     li = cria_lista();
     while (entrada != 12)
     {
-        printf("\n1) Criar Matriz Esparsa\n2)Listar Matrizes\n3)Imprimir Matriz\n4)Gerar matriz transposta\n5)Somar Matrizes\n6)Subtrair Matrizes\n6)Capturar Diagonal Principal\n\n");
+        printf("\n1) Criar Matriz Esparsa\n2)Listar Matrizes\n3)Imprimir Matriz\n4)Gerar matriz transposta\n5)Somar Matrizes\n\n");
         scanf(" %d", &entrada);
 
         switch (entrada)
@@ -436,18 +401,12 @@ int main()
                 scanf("%s", &nome[0]);
 
                 somar_matrizes(li, primeira->corpo, segunda->corpo, nome, primeira->qtd_l, segunda->qtd_c);
-
-                printf("Matriz %s criada com sucesso!\n\n", nome);
-
-                return 1;
             }
-
-            break;
         }
 
         case 6:
         {
-            printf("Qual matrizes deseja multiplicar?\n");
+            printf("Qual matrizes deseja subtrair?\n");
             printf("Primeira Matriz?");
             scanf("%s", &nome[0]);
             Matrizes *primeira = buscaPorNome(li, nome);
@@ -456,21 +415,21 @@ int main()
             scanf("%s", &nome[0]);
             Matrizes *segunda = buscaPorNome(li, nome);
 
-            if (primeira->qtd_c != segunda->qtd_l)
+            if (primeira->qtd_c != segunda->qtd_c || segunda->qtd_l != primeira->qtd_l)
             {
 
-                printf("Infelimente não é possível multiplicar uma matriz %dx%d com uma %dx%d", primeira->qtd_l, primeira->qtd_c, segunda->qtd_l, segunda->qtd_c);
+                printf("Infelimente não é possível somar uma matriz %dx%d com uma %dx%d", primeira->qtd_l, primeira->qtd_c, segunda->qtd_l, segunda->qtd_c);
             }
             else
             {
 
                 printf("Qual o nome da matriz que deseja gerar? ");
                 scanf("%s", &nome[0]);
-                multiplicar_matrizes(li, primeira, segunda, nome);
+
+                subtrair_matrizes(li, primeira->corpo, segunda->corpo, nome, primeira->qtd_l, segunda->qtd_c);
             }
 
             break;
         }
         }
-    }
-}
+    }}
