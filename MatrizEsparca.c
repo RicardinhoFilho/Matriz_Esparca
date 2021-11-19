@@ -13,15 +13,14 @@ typedef struct matrizes *Lista_Matrizes;
 typedef struct matrizes
 {
     char nome[1];
-    struct nodo corpo;
+    struct Nodos_Matriz *corpo;
     int qtd_l, qtd_c;
     struct matrizes *prox;
 } Matrizes_Esparsas;
 
-
 typedef struct matrizes Matrizes;
-typedef struct nodo *Nodo_Matriz;
-typedef struct nodo Nodos_Matriz;
+typedef struct nodo *Nodos_Matriz;
+typedef struct nodo Nodo_Matriz;
 
 //Criar lista de marizes Matrizes_Esparsas
 Lista_Matrizes *cria_lista()
@@ -36,9 +35,9 @@ Lista_Matrizes *cria_lista()
 }
 
 //Criar lista de nodos de uma matriz
-Nodo_Matriz *cria_lista_nodo()
+Nodos_Matriz *cria_lista_nodo()
 {
-    Nodo_Matriz *li = (Nodo_Matriz *)malloc(sizeof(Nodo_Matriz)); //reservar memoria para o primeiro no da lista
+    Nodos_Matriz *li = (Nodos_Matriz *)malloc(sizeof(Nodos_Matriz)); //reservar memoria para o primeiro no da lista
     if (li != NULL)
     {
         *li = NULL; //Dando ao ultimo elemento da lista o valor de null
@@ -52,7 +51,7 @@ void libera_lista(Lista_Matrizes *li)
 { //7
     if (li != NULL)
     {
-        Nodos_Matriz *no;
+        Nodo_Matriz *no;
         while ((*li) != NULL)
         {
             no = *li;          //no recebe inicio da lista
@@ -65,7 +64,7 @@ void libera_lista(Lista_Matrizes *li)
 }
 
 //função checagem nodo vazio
-int lista_vazia(Nodo_Matriz *li)
+int lista_vazia(Nodos_Matriz *li)
 {
 
     if (li == NULL) //lista nula
@@ -76,7 +75,7 @@ int lista_vazia(Nodo_Matriz *li)
 }
 
 //Função para inserir lista de nodo na matriz
-int insere_dados_matriz(Lista_Matrizes *li, Nodos_Matriz corpo, int q_col, int q_lin, char *nome)
+int insere_dados_matriz(Lista_Matrizes *li, Nodo_Matriz *corpo, int q_col, int q_lin, char *nome)
 {
     if (li == NULL)
         return 0;
@@ -88,7 +87,7 @@ int insere_dados_matriz(Lista_Matrizes *li, Nodos_Matriz corpo, int q_col, int q
     no->qtd_c = q_col;
     no->qtd_l = q_lin;
     strcpy(no->nome, nome);
-    printf("ESTE É O NOME %s\n\n\n\n\n\n\n",no->nome);
+    // printf("ESTE É O NOME %s\n\n\n\n\n\n\n",no->nome);
     no->prox = (*li);
 
     *li = no;
@@ -96,12 +95,12 @@ int insere_dados_matriz(Lista_Matrizes *li, Nodos_Matriz corpo, int q_col, int q
 }
 
 //Função para criar nodo da listax
-int insere_lista_nodo(Nodo_Matriz *li, int lin, int col, float valor)
+int insere_lista_nodo(Nodos_Matriz *li, int lin, int col, float valor)
 {
     if (li == NULL)
         return 0;
 
-    Nodos_Matriz *no = (Nodos_Matriz *)malloc(sizeof(Nodos_Matriz));
+    Nodo_Matriz *no = (Nodo_Matriz *)malloc(sizeof(Nodo_Matriz));
     if (no == NULL)
         return 0;
     no->col = col;
@@ -114,27 +113,94 @@ int insere_lista_nodo(Nodo_Matriz *li, int lin, int col, float valor)
 }
 
 //Buscar Matriz pelo nome
-
-Matrizes* buscaPorNome(Lista_Matrizes *li, char nome[1])
+Matrizes *buscaPorNome(Lista_Matrizes *li, char nome[1])
 {
 
     if (li == NULL)
         return 0;
 
     Matrizes *no = *li;
- printf("Este aqui ó %s\n\n",nome);
+    //printf("Este aqui ó %s\n\n",nome);
     while (no != NULL && no->nome[0] != nome[0])
-    {   
-        printf("ATENÇÃO!!!");
-         printf("%s",no->nome);
-        printf("%d  \n", no->qtd_c);
-         printf("%d  \n", no->qtd_l);
+    {
+        // printf("ATENÇÃO!!!");
+        //  printf("%s",no->nome);
+        // printf("%d  \n", no->qtd_c);
+        //  printf("%d  \n", no->qtd_l);
 
-        
         no = no->prox;
     }
 
     return no;
+}
+
+float buscaNodoPorPosicao(Nodos_Matriz *li, int lin, int col)
+{
+
+    if (li == NULL)
+    {
+        return 0;
+    }
+
+    Nodo_Matriz *no = *li;
+
+    while (no != NULL && (no->lin != lin || no->col != col))
+    {
+       // printf("O dado aqui: %f\n\n\n",no->dado);
+        no = no->prox;
+    }
+
+    if (no == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+
+        return no->dado;
+    }
+}
+
+//Imprimir Linhas e Colunas
+
+Matrizes *imprimirMatriz(Matrizes *no)
+{
+    int l = 0, c = 0;
+
+    printf("Matriz %s: %d x %d\n", no->nome, no->qtd_l, no->qtd_c);
+
+
+    printf("Matriz Esparsa %s : %d x %d \n", no->nome, no->qtd_l, no->qtd_c);
+    for (l = 0; l < no->qtd_l; l++)
+    {
+       
+        for (c = 0; c < no->qtd_c; c++)
+        {
+            
+            printf("%.2f  ", buscaNodoPorPosicao(no->corpo, l+1, c+1));
+        }
+        printf("\n");
+    }
+}
+
+//Listar matrizes
+void listar_matrizes(Lista_Matrizes *li)
+{
+
+    if (li == NULL)
+    {
+        printf("Sua lista de matrizes ainda está vazia!\n");
+        return 0;
+    }
+
+    Matrizes *no = *li;
+
+    while (no != NULL)
+    {
+        printf("Matriz %s: %d x %d\n", no->nome, no->qtd_l, no->qtd_c);
+
+        no = no->prox;
+    }
 }
 
 int main()
@@ -143,12 +209,12 @@ int main()
     int entrada, entrada2, linhas, colunas, posicao_li, posicao_col;
     char nome[1];
     float valor;
-    struct nodo nodo_matriz;
+    struct nodo Nodos_Matriz;
     Lista_Matrizes *li;
     li = cria_lista();
     while (entrada != 12)
     {
-        printf("1) Criar Matriz Esparsa\n");
+        printf("\n1) Criar Matriz Esparsa\n2)Listar Matrizes\n3)Imprimir Matriz\n\n");
         scanf(" %d", &entrada);
 
         switch (entrada)
@@ -164,8 +230,8 @@ int main()
             printf("Defina o nome de sua Matriz:");
             scanf("%s", &nome[0]);
 
-            struct Nodo_Matriz *li_nodo = cria_lista_nodo();
-            Nodos_Matriz *aux = li_nodo;
+            struct Nodos_Matriz *li_nodo = cria_lista_nodo();
+            Nodo_Matriz *aux = li_nodo;
 
             while (entrada2 != 2)
             {
@@ -177,7 +243,7 @@ int main()
                 case 1:
                 {
 
-                    printf("Defina a posição de seu dado: \n");
+                    printf("Defina a posição de seu nodo: \n");
                     printf("Linha: ");
                     scanf(" %d", &posicao_li);
 
@@ -186,11 +252,11 @@ int main()
 
                     printf("Defina o valor do nodo: \n");
                     scanf(" %f", &valor);
-                    if (posicao_col < 0 || posicao_col > colunas)
+                    if (posicao_col <= 0 || posicao_col > colunas)
                     {
                         printf("Posição da coluna inválida!\n");
                     }
-                    else if (posicao_li < 0 || posicao_li > linhas)
+                    else if (posicao_li <= 0 || posicao_li > linhas)
                     {
                         printf("Posição da linha inválida!\n");
                     }
@@ -204,8 +270,7 @@ int main()
 
                 case 2:
                 {
-                    insere_dados_matriz(li, *aux, colunas, linhas, nome);
-                    
+                    insere_dados_matriz(li, aux, colunas, linhas, nome);
                 }
                 }
             }
@@ -214,12 +279,20 @@ int main()
         }
 
         case 2:
-        {   
-            printf("Qual matriz deseja buscal:");
+        {
+
+            listar_matrizes(li);
+            break;
+        }
+
+        case 3:
+        {
+            printf("Qual matriz deseja visualizar?");
             scanf("%s", &nome[0]);
             Matrizes *teste = buscaPorNome(li, nome);
+            imprimirMatriz(teste);
 
-            printf(" se pa deu certo olhe %s", teste->nome);
+            break;
         }
         }
     }
