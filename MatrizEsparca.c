@@ -227,27 +227,55 @@ int gerar_transposta(Lista_Matrizes *li, Nodos_Matriz *corpo, int lin, int col, 
 int somar_matrizes(Lista_Matrizes *li, Nodos_Matriz *corpo1, Nodos_Matriz *corpo2, char nome[1], int linhas, int colunas)
 {
     int l, c;
-    
+
     struct Nodos_Matriz *li_nodo = cria_lista_nodo();
-    printf("%d x %d",linhas,colunas);
+    printf("%d x %d", linhas, colunas);
     for (l = 0; l < linhas; l++)
     {
         for (c = 0; c < colunas; c++)
         {
-            printf("%f",buscaNodoPorPosicao(corpo1, l + 1, c + 1));
-             float valor1 = buscaNodoPorPosicao(corpo1, l + 1, c + 1);
-             float valor2 = buscaNodoPorPosicao(corpo2, l + 1, c + 1);
+            // printf("%f",buscaNodoPorPosicao(corpo1, l + 1, c + 1));
+            float valor1 = buscaNodoPorPosicao(corpo1, l + 1, c + 1);
+            float valor2 = buscaNodoPorPosicao(corpo2, l + 1, c + 1);
 
-             if ((valor1 + valor2 )!= 0)
-             {   
-                 printf("teste\n");
-             printf("valor1 + valor2 = %.2f", valor1);
-                  insere_lista_nodo(li_nodo, l + 1, c + 1, valor1 + valor2);
-             }
+            if ((valor1 + valor2) != 0)
+            {
+                // printf("teste\n");
+                //printf("valor1 + valor2 = %.2f", valor1);
+                insere_lista_nodo(li_nodo, l + 1, c + 1, valor1 + valor2);
+            }
         }
     }
 
-      insere_dados_matriz(li, li_nodo,colunas,linhas, nome);
+    insere_dados_matriz(li, li_nodo, colunas, linhas, nome);
+    return 1;
+}
+
+
+int subtrair_matrizes(Lista_Matrizes *li, Nodos_Matriz *corpo1, Nodos_Matriz *corpo2, char nome[1], int linhas, int colunas)
+{
+    int l, c;
+
+    struct Nodos_Matriz *li_nodo = cria_lista_nodo();
+    printf("%d x %d", linhas, colunas);
+    for (l = 0; l < linhas; l++)
+    {
+        for (c = 0; c < colunas; c++)
+        {
+            // printf("%f",buscaNodoPorPosicao(corpo1, l + 1, c + 1));
+            float valor1 = buscaNodoPorPosicao(corpo1, l + 1, c + 1);
+            float valor2 = buscaNodoPorPosicao(corpo2, l + 1, c + 1);
+
+            if ((valor1 - valor2) != 0)
+            {
+                // printf("teste\n");
+                //printf("valor1 + valor2 = %.2f", valor1);
+                insere_lista_nodo(li_nodo, l + 1, c + 1, valor1 - valor2);
+            }
+        }
+    }
+
+    insere_dados_matriz(li, li_nodo, colunas, linhas, nome);
     return 1;
 }
 
@@ -376,6 +404,35 @@ int main()
                 scanf("%s", &nome[0]);
 
                 somar_matrizes(li, primeira->corpo, segunda->corpo, nome, primeira->qtd_l, segunda->qtd_c);
+            }
+
+            break;
+        }
+
+
+         case 6:
+        {
+            printf("Qual matrizes deseja sibtrair?\n");
+            printf("Primeira Matriz?");
+            scanf("%s", &nome[0]);
+            Matrizes *primeira = buscaPorNome(li, nome);
+
+            printf("Segunda Matriz?\n");
+            scanf("%s", &nome[0]);
+            Matrizes *segunda = buscaPorNome(li, nome);
+
+            if (primeira->qtd_c != segunda->qtd_c || segunda->qtd_l != primeira->qtd_l)
+            {
+
+                printf("Infelimente não é possível subtrair uma matriz %dx%d com uma %dx%d", primeira->qtd_l, primeira->qtd_c, segunda->qtd_l, segunda->qtd_c);
+            }
+            else
+            {
+
+                printf("Qual o nome da matriz que deseja gerar? ");
+                scanf("%s", &nome[0]);
+
+                subtrair_matrizes(li, primeira->corpo, segunda->corpo, nome, primeira->qtd_l, segunda->qtd_c);
             }
 
             break;
