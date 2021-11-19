@@ -146,7 +146,7 @@ float buscaNodoPorPosicao(Nodos_Matriz *li, int lin, int col)
 
     while (no != NULL && (no->lin != lin || no->col != col))
     {
-       // printf("O dado aqui: %f\n\n\n",no->dado);
+        // printf("O dado aqui: %f\n\n\n",no->dado);
         no = no->prox;
     }
 
@@ -169,15 +169,14 @@ Matrizes *imprimirMatriz(Matrizes *no)
 
     printf("Matriz %s: %d x %d\n", no->nome, no->qtd_l, no->qtd_c);
 
-
     printf("Matriz Esparsa %s : %d x %d \n", no->nome, no->qtd_l, no->qtd_c);
     for (l = 0; l < no->qtd_l; l++)
     {
-       
+
         for (c = 0; c < no->qtd_c; c++)
         {
-            
-            printf("%.2f  ", buscaNodoPorPosicao(no->corpo, l+1, c+1));
+
+            printf("%.2f  ", buscaNodoPorPosicao(no->corpo, l + 1, c + 1));
         }
         printf("\n");
     }
@@ -203,6 +202,36 @@ void listar_matrizes(Lista_Matrizes *li)
     }
 }
 
+//Gerar matriz transposta
+int gerar_transposta(Lista_Matrizes *li, Nodos_Matriz *corpo, int lin, int col, char nome[1])
+{
+
+    if (li == NULL)
+    {
+
+        return 0;
+    }
+
+    Matrizes *no = (Matrizes *)malloc(sizeof(Matrizes));
+    if (no == NULL)
+        return 0;
+    no->corpo = corpo;
+    no->qtd_c = lin;
+    no->qtd_l = col;
+    strcpy(no->nome, nome);
+
+    Nodo_Matriz *no_nodo = *corpo;
+    struct Nodos_Matriz *li_nodo = cria_lista_nodo();
+    while (no != NULL)
+    {
+        insere_lista_nodo(li_nodo, no_nodo->col, no_nodo->lin, no_nodo->dado);
+        no = no->prox;
+    }
+
+    insere_dados_matriz(li, li_nodo, lin, col, nome);
+    return 1;
+};
+
 int main()
 {
 
@@ -214,7 +243,7 @@ int main()
     li = cria_lista();
     while (entrada != 12)
     {
-        printf("\n1) Criar Matriz Esparsa\n2)Listar Matrizes\n3)Imprimir Matriz\n\n");
+        printf("\n1) Criar Matriz Esparsa\n2)Listar Matrizes\n3)Imprimir Matriz\n3)Gerar matriz transposta\n\n");
         scanf(" %d", &entrada);
 
         switch (entrada)
@@ -292,6 +321,17 @@ int main()
             Matrizes *teste = buscaPorNome(li, nome);
             imprimirMatriz(teste);
 
+            break;
+        }
+
+        case 4:
+        {
+            printf("Deseja gerar a matriz transposta de qual matriz?");
+            scanf("%s", &nome[0]);
+            Matrizes *teste = buscaPorNome(li, nome);
+            printf("Como deseja chamar esta matriz?");
+            scanf("%s", &nome[0]);
+            gerar_transposta(li, teste->corpo, teste->qtd_l, teste->qtd_c, nome);
             break;
         }
         }
