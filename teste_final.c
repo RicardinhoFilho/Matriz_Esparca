@@ -54,12 +54,19 @@ Nodos_Matriz *cria_lista_nodo()
 //Funcao para liberar a lista de matrizes
 void libera_lista_matrizes(Lista_Matrizes *li)
 {
+    Matrizes *no = *li;
     if (li != NULL)
     {
-        Matrizes *no = *li;
+        while ((*li) != NULL)
+        {
+            no = *li; //no recebe inicio da lista
+            Matrizes *nodos = no->corpo;
+            libera_nodos(nodos);
+            *li = (*li)->prox; //inicio da lista vai apontar para a proxima matriz
+            free(no);
+        }
 
-        Matrizes *nodos = no->corpo;
-        libera_nodos(nodos);
+        //
         free(li); //libera inicio da lista
     }
     printf("Lista liberada.\n\n");
@@ -70,6 +77,7 @@ void libera_nodos(Nodos_Matriz *li)
     Nodo_Matriz *no = *li;
     while (no != NULL)
     {
+        //printf("DADO: %f\n\n\n", no->dado);
         no = no->prox;
         free(no);
     }
