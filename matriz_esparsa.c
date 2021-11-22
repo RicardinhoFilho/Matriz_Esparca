@@ -350,7 +350,7 @@ int main()
     li = cria_lista();
     while (entrada != 12)
     {
-        printf("\n1) Criar Matriz Esparsa\n2)Listar Matrizes\n3)Imprimir Matriz\n4)Gerar matriz transposta\n5)Somar Matrizes\n6)Subtrair Matrizes\n7)Multiplicar Matrizes\n7)Buscar diagonal Principal\n9)Liberar matrizes\n\n");
+        printf("\n1) Criar Matriz Esparsa\n2)Listar Matrizes\n3)Imprimir Matriz\n4)Gerar matriz transposta\n5)Somar Matrizes\n6)Subtrair Matrizes\n7)Multiplicar Matrizes\n8)Buscar diagonal Principal\n9)Liberar matrizes\n\n");
         scanf(" %d", &entrada);
 
         switch (entrada)
